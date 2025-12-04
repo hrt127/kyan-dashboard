@@ -161,6 +161,17 @@ with tab3:
     1. ✅ Final dashboard update  
     2. ✅ Tab 4 → "Save EOD Log" → Copy table → Obsidian  
     3. ✅ Screenshot PnL → Archive
+    
+    ## 📸 EOD SCREENSHOTS (30 sec)
+    1. **Tab 1** (Dashboard) → Ctrl+Shift+P → "Full page screenshot"  
+    2. **Tab 2** (ELFA) → Full page screenshot  
+    3. **Tab 3** (Routine) → Screenshot  
+    4. **Tab 4** → "Generate EOD Report" → Copy → Obsidian
+
+    **Browser Extensions (1-click):**  
+    **GoFullPage** (Chrome) → Full PNG  
+    **Fireshot** → PDF  
+    **Awesome Screenshot** → Annotated
 
     **TOTAL TIME: 10 min/day. REST = Execute.**
     """)
@@ -193,6 +204,39 @@ with tab4:
         st.dataframe(recent_logs)
     else:
         st.info("👆 Save your first log")
+
+# EOD REPORT GENERATOR
+st.markdown("---")
+st.subheader("📸 EOD Report Generator")
+
+if st.button("🎯 GENERATE FULL EOD REPORT", type="primary"):
+    report = f"""
+# Kyan Stage 2 - EOD Report ({datetime.now().strftime('%Y-%m-%d %H:%M SAST')})
+
+## 📊 DASHBOARD SNAPSHOT
+**Equity:** ${realized + unrealized + 250000:,.0f} | **Realized:** ${realized:,.0f} | **Risk:** {risk_score}/{risk_target}
+
+**IMr:** {imr_pct}% | **Delta:** {delta:.2f} BTC
+
+## 🎯 TODAY'S ACTIONS
+- Updated from Kyan: {realized + unrealized:,.0f} equity
+- Risk: {risk_score}/{risk_target} → {'DOMINATE' if risk_score <= risk_target else 'CAUTION'}
+"""
+    
+    if 'elfa_logs' in st.session_state:
+        report += "\n## 📋 ELFA LOGS (Last 3):\n"
+        for log in st.session_state.elfa_logs[-3:]:
+            report += f"- {log['Time']}: {log['Summary'][:100]}...\n"
+    
+    if 'trade_logs' in st.session_state:
+        report += "\n## 💾 TRADE LOGS (Last 3):\n"
+        for log in st.session_state.trade_logs[-3:]:
+            report += f"- {log['DateTime']}: {log['Notes'][:100]}...\n"
+    
+    st.markdown("### 📄 **Copy this → Obsidian Daily Note**")
+    st.code(report, language="markdown")
+    st.success("✅ **EOD REPORT READY** - One-click copy!")
+    st.balloons()
 
 st.markdown("---")
 st.markdown("""
