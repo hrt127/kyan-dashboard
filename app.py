@@ -89,18 +89,15 @@ with tab1:
     
     # PLAN + QUICK ACTION
     col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("🎯 Today's BTC Plan (Update from ELFA)")
-        st.markdown("""
-        **Range 92-94k**  
-        → Perp scalps $100-150k clips
-        
-        **Breakout >94.5k**  
-        → Add 12Dec 95/100C spreads (2x current size)
-        
-        **Breakdown <91.8k**  
-        → Cut 50% delta → Add put spreads
-        """)
+   with col1:
+    st.subheader("🎯 Today's BTC Plan - EDITABLE")
+    btc_plan = st.text_area("",
+        value="""**Range 88-90k** → Perp scalps $100-150k
+**Breakout >90.3k** → Add 12Dec 90/95C spreads (2x size)
+**Breakdown <88k** → Cut 50% delta → Add put spreads""",
+        height=140, key="btc_plan")
+
+
     
     with col2:
         st.subheader("⚡ Quick Actions")
@@ -116,30 +113,26 @@ with tab1:
 
 # TAB 2: ELFA LOGS
 with tab2:
-    st.header("📋 ELFA Updates - Paste & Save")
-    st.markdown("*Copy from elfa.ai → Paste here → Save → Copy to Obsidian*")
+    st.header("📋 ELFA Parser - Auto-generates BTC Plan")
     
-    elfa_note = st.text_area("Paste latest ELFA BTC summary:", height=250, 
-                            placeholder="BTC: Range 92-94k. Bullish >94.5k strong vol. Bearish <91.8k...")
+    elfa_raw = st.text_area("Paste full ELFA report:", height=400)
     
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("💾 Save ELFA Update", type="primary"):
-            elfa_log = {
-                'Time': datetime.now().strftime('%H:%M SAST'),
-                'BTC_Price': st.number_input("BTC ref price", value=93385),
-                'Summary': elfa_note[:500]
-            }
-            if 'elfa_logs' not in st.session_state:
-                st.session_state.elfa_logs = []
-            st.session_state.elfa_logs.append(elfa_log)
-            st.success("✅ ELFA saved! Copy table below → Obsidian")
-    
-    if 'elfa_logs' in st.session_state:
-        st.subheader("Last 10 ELFA Updates")
-        st.dataframe(pd.DataFrame(st.session_state.elfa_logs).tail(10))
-    else:
-        st.info("👆 Paste your first ELFA update")
+    if st.button("🤖 PARSE ELFA → BTC PLAN", type="primary"):
+        lines = elfa_raw.lower()
+        
+        ranges = []
+        if any(word in lines for word in ['range', '88k', '90k']):
+            ranges.append("**Range 88-90k** → Perp scalps $100k")
+        if '90k' in lines or 'breakout' in lines:
+            ranges.append("**Breakout >90.3k** → 12Dec bull spreads")
+        if '88k' in lines or 'breakdown' in lines:
+            ranges.append("**Breakdown <88k** → Cut delta + puts")
+        
+        auto_plan = "\n".join(ranges)
+        st.text_area("✅ COPY THIS → Tab 1 BTC Plan:", 
+                    value=auto_plan or "Range-bound → Small scalps only", 
+                    height=140, key="auto_plan")
+        st.success("✅ Copy above → Paste Tab 1!")
 
 # TAB 3: DAILY ROUTINE
 with tab3:
