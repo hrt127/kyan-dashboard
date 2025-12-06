@@ -119,17 +119,28 @@ with tab2:
         lines = elfa_raw.lower()
         
         ranges = []
-        if any(word in lines for word in ['range', '88k', '90k']):
-            ranges.append("**Range 88-90k** → Perp scalps $100k")
-        if '90k' in lines or 'breakout' in lines:
-            ranges.append("**Breakout >90.3k** → 12Dec bull spreads")
-        if '88k' in lines or 'breakdown' in lines:
-            ranges.append("**Breakdown <88k** → Cut delta + puts")
+        
+        # SHORT BIAS (most common)
+        if any(word in lines for word in ['short scalp', '$90,250', 'short-term short']):
+            ranges.append("**SHORT BIAS** → Short $90.2k → TP $87.5k → SL $91.4k")
+            ranges.append("**Perps:** $100-150k short clips")
+        
+        # SPECIFIC LEVELS
+        if '$87' in lines or '$87,000' in lines:
+            ranges.append("**Support $87k** → Bounce? Wait for reversal candle")
+        if '$90k' in lines:
+            ranges.append("**Resistance $90-91k** → Sell rallies")
+        if '$82k' in lines or '$85k' in lines:
+            ranges.append("**Breakdown <87k** → Targets $85k → $82k")
+        
+        # GENERIC RANGE
+        if 'range' in lines and not ranges:
+            ranges.append("**Range play** → Small scalps $88-90k")
         
         auto_plan = "\n".join(ranges)
         st.text_area("✅ COPY THIS → Tab 1 BTC Plan:", 
-                    value=auto_plan or "Range-bound → Small scalps only", 
-                    height=140, key="auto_plan")
+                    value=auto_plan or "No clear setup → Wait for breakout", 
+                    height=160, key="auto_plan")
         st.success("✅ Copy above → Paste Tab 1!")
 
 # TAB 3: DAILY ROUTINE
