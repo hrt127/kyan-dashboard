@@ -88,28 +88,26 @@ with tab1:
         st.dataframe(orders)
     
     # PLAN + QUICK ACTION
-    col1, col2 = st.columns(2)
-   with col1:
-    st.subheader("🎯 Today's BTC Plan - EDITABLE")
-    btc_plan = st.text_area("",
-        value="""**Range 88-90k** → Perp scalps $100-150k
-**Breakout >90.3k** → Add 12Dec 90/95C spreads (2x size)
-**Breakdown <88k** → Cut 50% delta → Add put spreads""",
-        height=140, key="btc_plan")
-
-
+        col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("📊 Current Positions (Update from Kyan)")
+        portfolio = pd.DataFrame({
+            'Instrument': ['BTC-PERPETUAL', 'BTC-05DEC25-88000-C'], 
+            'Size': [75000, -0.60],
+            'U.PnL': [717.84, -1914.38],
+            'Delta': [0.803, -0.585]
+        })
+        st.dataframe(portfolio)
     
     with col2:
-        st.subheader("⚡ Quick Actions")
-        col_a, col_b = st.columns(2)
-        with col_a:
-            if st.button("📱 Set Alerts (91.8k/94.5k)", type="secondary"):
-                st.balloons()
-                st.info("✅ Set phone alerts: 91.8k ↓, 94.5k ↑")
-        with col_b:
-            if st.button("📸 Screenshot for Obsidian", type="secondary"):
-                st.balloons()
-                st.success("✅ Screenshot → Paste daily note!")
+        st.subheader("📋 Open Orders (Update from Kyan)")
+        orders = pd.DataFrame({
+            'Instrument': ['BTC-05DEC25-80000-P'], 
+            'Side': ['Sell'],
+            'Size': [2.0],
+            'Limit': ['$0.40']
+        })
+        st.dataframe(orders)
 
 # TAB 2: ELFA LOGS
 with tab2:
