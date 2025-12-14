@@ -37,7 +37,7 @@ This is a minimal yet functional Streamlit app designed to help traders track th
 
 ## How to use
 
-1. 1. Open [your actual Streamlit URL](https://kyan-dashboard-hrt127.streamlit.app)
+1. 1. Open [your actual Streamlit URL](https://kyan-dashboard-7hybvva7xikwuhwdqz72jj.streamlit.app/)
 2. Enter your portfolio data from the Kyan UI: realized/unrealized PnL, net delta (BTC), IMr %.  
 3. Review the dashboard’s risk score and follow suggested actions (gear up or de-risk).  
 4. Review the positions and open orders to confirm your current exposure.  
